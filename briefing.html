@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Agents 教學簡報</title>
+<style>
+:root{--bg:#fbfaf7;--ink:#1f2430;--mute:#5b6270;--acc:#2f5bea;--card:#ffffff;--line:#e3e0d8}
+@media (prefers-color-scheme:dark){:root{--bg:#14171f;--ink:#eceae4;--mute:#a4a9b5;--acc:#8fa9ff;--card:#1c2029;--line:#2c3140}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif}
+.deck{height:100vh;overflow:hidden;position:relative}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:6vh 8vw 9vh;max-width:1200px;margin:0 auto}
+.slide.on{display:flex}
+h1{font-size:clamp(34px,6vw,68px);line-height:1.15;margin:.2em 0}
+h2{font-size:clamp(26px,4vw,44px);margin:0 0 .6em;line-height:1.2}
+.eyebrow{color:var(--acc);font-weight:700;letter-spacing:.08em}
+.sub{font-size:clamp(18px,2.4vw,28px);color:var(--mute);margin:.2em 0 1.2em}
+.note{color:var(--mute);font-size:15px}
+.pts{list-style:none;padding:0;margin:0;display:grid;gap:14px}
+.pts li{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 20px;font-size:clamp(17px,2.2vw,26px);line-height:1.5}
+.cite{display:inline-block;margin-left:10px;padding:1px 8px;border-radius:999px;border:1px solid var(--acc);color:var(--acc);font-size:12px;vertical-align:middle;cursor:help}
+.aside{margin-top:18px;color:var(--mute);font-size:clamp(14px,1.6vw,18px)}
+.loop{width:100%;max-width:640px;margin:0 0 18px;color:var(--acc)}
+.loop .node rect{fill:var(--card);stroke:var(--acc);stroke-width:2}
+.loop .h{fill:var(--ink);font-size:22px;font-weight:700}
+.loop .s{fill:var(--mute);font-size:13px}
+.loop .ln{stroke:currentColor;stroke-width:2.2;fill:none}
+.src{list-style:none;padding:0;margin:0;display:grid;gap:10px;font-size:clamp(15px,1.8vw,20px)}
+.sid{display:inline-block;min-width:2.2em;font-weight:700;color:var(--acc)}
+a{color:var(--ink)}
+.bar{position:fixed;left:0;bottom:0;height:5px;background:var(--acc);width:0;transition:width .2s}
+.nav{position:fixed;bottom:12px;right:18px;color:var(--mute);font-size:14px;display:flex;gap:10px;align-items:center}
+.nav button{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font:inherit;cursor:pointer}
+@media print{.deck{height:auto;overflow:visible}.slide{position:static;display:flex;min-height:100vh;page-break-after:always}.nav,.bar{display:none}}
+</style></head><body>
+<div class="deck" id="deck">
+<section class="slide cover"><div class="eyebrow">教學簡報</div>
+<h1>AI Agents 是什麼？</h1><p class="sub">給完全不懂的人的 10 分鐘簡報</p><p class="note">資料來源：自建 LLM Wiki（5 篇來源）</p></section>
+<section class="slide"><h2>聊天機器人 vs. Agent：差在哪？</h2><ul class="pts"><li><span class="t">傳統聊天機器人依預設腳本回應</span><span class="cite" tabindex="0" title="客服：傳統聊天機器人依預設腳本回應，agent 則能預判需求並主動採取行動，複雜問題會自動升級給人類，也能直接開立工單或處理退款。">S5.5</span></li><li><span class="t">Agent 能預判需求、主動行動，必要時升級給人類</span><span class="cite" tabindex="0" title="客服：傳統聊天機器人依預設腳本回應，agent 則能預判需求並主動採取行動，複雜問題會自動升級給人類，也能直接開立工單或處理退款。">S5.5</span></li><li><span class="t">只回答一輪的 LLM、簡單聊天機器人，不算 agent</span><span class="cite" tabindex="0" title="雖然整合了 LLM、但不用它來控制工作流程執行的應用，例如簡單聊天機器人、單輪 LLM、情緒分類器，不算 agent。">S2.2</span></li></ul><p class="aside">〔比喻〕聊天機器人像「常見問題機」；agent 像會自己去查系統、把事情辦完的助理。</p></section>
+<section class="slide"><h2>Agent 是什麼？三家怎麼說</h2><ul class="pts"><li><span class="t">OpenAI：獨立代替使用者完成任務的系統</span><span class="cite" tabindex="0" title="OpenAI 對 agent 的定義是：獨立代替使用者完成任務的系統。">S2.1</span></li><li><span class="t">Anthropic：LLM 動態決定自己的流程與工具使用</span><span class="cite" tabindex="0" title="Anthropic 把各種做法統稱為 agentic systems，並區分兩種架構：workflows 是 LLM 與工具透過「預先寫好的程式路徑」被編排；agents 則是 LLM 動態決定自己的流程與工具使用，自己掌控如何完成任務。">S1.1</span></li><li><span class="t">IBM：能規劃、做決策、使用工具、保留上下文、完成多步驟任務</span><span class="cite" tabindex="0" title="IBM 認為 AI agent 能規劃、做決策、使用工具、保留上下文並完成多步驟任務，比聊天機器人更像「數位同事」。">S5.1</span></li><li><span class="t">共同點：用 LLM 做決策，並透過工具與外部系統互動</span><span class="cite" tabindex="0" title="agent 有兩個核心特徵：(1) 用 LLM 管理工作流程執行並做決策，能辨識工作何時完成、主動修正行動，失敗時可中止並把控制權交還使用者；(2) 能使用各種工具與外部系統互動，依流程當前狀態動態選擇工具，並始終在清楚定義的護欄內運作。">S2.3</span></li></ul></section>
+<section class="slide"><h2>Agent 和 Workflow 不一樣</h2><ul class="pts"><li><span class="t">Workflow：LLM 與工具照「預先定義的程式路徑」運作</span><span class="cite" tabindex="0" title="Anthropic 把各種做法統稱為 agentic systems，並區分兩種架構：workflows 是 LLM 與工具透過「預先寫好的程式路徑」被編排；agents 則是 LLM 動態決定自己的流程與工具使用，自己掌控如何完成任務。">S1.1</span></li><li><span class="t">Agent：由 LLM 動態決定自己的流程與工具使用</span><span class="cite" tabindex="0" title="Anthropic 把各種做法統稱為 agentic systems，並區分兩種架構：workflows 是 LLM 與工具透過「預先寫好的程式路徑」被編排；agents 則是 LLM 動態決定自己的流程與工具使用，自己掌控如何完成任務。">S1.1</span></li><li><span class="t">Workflow 對定義清楚的任務較可預測、一致；agent 適合需要彈性的情境</span><span class="cite" tabindex="0" title="建議先找最簡單的解法，必要時才增加複雜度，甚至可能根本不需要 agentic 系統；agentic 系統通常拿延遲與成本換取更好的任務表現。文中進一步說，workflow 對定義清楚的任務能提供可預測性與一致性，而需要彈性、且要大規模由模型自行決策時，agent 是比較好的選擇。">S1.3</span></li></ul></section>
+<section class="slide"><h2>Agent 怎麼運作？一圈一圈做</h2><svg class="loop" viewBox="0 0 560 190" role="img" aria-label="思考、行動、觀察的循環">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>
+<g class="node"><rect x="10" y="40" width="150" height="70" rx="14"/><text x="85" y="72" text-anchor="middle" class="h">思考</text><text x="85" y="95" text-anchor="middle" class="s">想下一步做什麼</text></g>
+<g class="node"><rect x="205" y="40" width="150" height="70" rx="14"/><text x="280" y="72" text-anchor="middle" class="h">行動</text><text x="280" y="95" text-anchor="middle" class="s">呼叫工具</text></g>
+<g class="node"><rect x="400" y="40" width="150" height="70" rx="14"/><text x="475" y="72" text-anchor="middle" class="h">觀察</text><text x="475" y="95" text-anchor="middle" class="s">看工具回傳的結果</text></g>
+<path d="M160 75H203" class="ln" marker-end="url(#ar)"/><path d="M355 75H398" class="ln" marker-end="url(#ar)"/>
+<path d="M475 112V160H85V114" class="ln" fill="none" marker-end="url(#ar)"/>
+<text x="280" y="180" text-anchor="middle" class="s">重複，直到完成或達到退出條件</text></svg><ul class="pts"><li><span class="t">核心是一個迴圈，持續運作到退出條件成立</span><span class="cite" tabindex="0" title="每個 orchestration 方式都有「run」的概念，通常實作成迴圈，讓 agent 持續運作到退出條件成立，常見退出條件包括呼叫最終輸出工具、模型回覆中沒有工具呼叫、發生錯誤、或達到最大回合數。">S2.7</span></li><li><span class="t">經典樣式 ReAct：Thought → Action → Observation，重複多輪</span><span class="cite" tabindex="0" title="自我反思讓 agent 能回顧過去的行動、修正錯誤，在必然會試誤的真實任務中很重要。ReAct 把推理與行動結合，提示格式大致是 Thought、Action、Observation 重複許多輪；Reflexion 則為 agent 加上動態記憶與自我反思，產生的反思會被加進 agent 的工作記憶（最多三則），作為後續詢問 LLM 的脈絡。">S3.3</span></li><li><span class="t">每一步都要向環境取得 ground truth（例如工具結果）來判斷進度</span><span class="cite" tabindex="0" title="Agent 先由人類下達指令或對話釐清任務，之後自行規劃並執行；執行中每一步都要從環境取得「ground truth」（例如工具回傳結果、程式執行結果）來判斷進度，並可在檢查點或遇到阻礙時暫停詢問人，也常設定停止條件（例如最大迭代次數）。">S1.6</span></li><li><span class="t">停下來的條件：完成、出錯、或達到最大回合數</span><span class="cite" tabindex="0" title="每個 orchestration 方式都有「run」的概念，通常實作成迴圈，讓 agent 持續運作到退出條件成立，常見退出條件包括呼叫最終輸出工具、模型回覆中沒有工具呼叫、發生錯誤、或達到最大回合數。">S2.7</span></li></ul></section>
+<section class="slide"><h2>三個核心零件：規劃、記憶、工具</h2><ul class="pts"><li><span class="t">規劃：把大任務拆成小步驟（例如 Chain of Thought）</span><span class="cite" tabindex="0" title="規劃包含任務分解與自我反思。任務分解常見做法有 Chain of Thought（要求模型逐步思考）、Tree of Thoughts（每一步探索多種想法形成樹狀）、以及 LLM+P（把長期規劃外包給傳統規劃器）。">S3.2</span></li><li><span class="t">記憶：短期記憶受 context window 限制；長期記憶放在外部向量資料庫</span><span class="cite" tabindex="0" title="記憶分短期與長期：短期記憶對應 in-context learning，受限於 Transformer 有限的 context window；長期記憶對應外部向量資料庫，透過快速檢索（近似最近鄰搜尋）取用。">S3.5</span></li><li><span class="t">工具：呼叫外部 API，補足模型本身缺少的資訊</span><span class="cite" tabindex="0" title="工具使用是讓 agent 呼叫外部 API，補足模型權重中缺少的資訊，例如最新資訊、執行程式的能力、私有資料來源。">S3.6</span></li><li><span class="t">工具分三類：Data（取資料）、Action（做事）、Orchestration（叫別的 agent）</span><span class="cite" tabindex="0" title="工具分三類：Data（取得脈絡資訊）、Action（對系統採取行動，如寄信、更新紀錄）、Orchestration（agent 本身可被當作別的 agent 的工具）。">S2.6</span></li></ul></section>
+<section class="slide"><h2>怎麼確保它不走偏？護欄與檢查</h2><ul class="pts"><li><span class="t">護欄要分層：單一護欄通常不夠，多層更穩</span><span class="cite" tabindex="0" title="護欄應分層設計：單一護欄通常不夠，要混合多種，包括 relevance classifier、safety classifier、PII filter、moderation、tool safeguards（依風險給低／中／高評級，評估因素包括唯讀或可寫入、能否還原、所需權限與財務影響，並據此觸發自動動作，例如在執行高風險功能前暫停做護欄檢查，或升級給人類）、rules-based protections、output validation。">S2.9</span></li><li><span class="t">失敗次數太多、或高風險動作，就交給人類</span><span class="cite" tabindex="0" title="應規劃人類介入機制，兩個主要觸發條件：超過失敗門檻（例如重試太多次）、以及高風險動作（例如大額退款、付款）。">S2.10</span></li><li><span class="t">先在沙盒中大量測試，再放手</span><span class="cite" tabindex="0" title="Agent 的自主性意味著成本較高、錯誤可能累積；建議在沙盒中大量測試，並加上適當護欄。">S1.8</span></li><li><span class="t">小心：LLM 自己評估自己可能不可靠（ChemCrow 案例）</span><span class="cite" tabindex="0" title="ChemCrow 案例中，LLM 自我評估認為 GPT-4 與 ChemCrow 表現差不多，但專家人工評估發現 ChemCrow 大幅領先，作者據此指出：在需要深度專業的領域，用 LLM 評估自己的表現可能有問題，因為它可能不知道自己的缺陷。">S3.9</span></li></ul></section>
+<section class="slide"><h2>Agent 能做什麼？</h2><ul class="pts"><li><span class="t">客服：預判需求、主動處理，必要時轉給真人</span><span class="cite" tabindex="0" title="客服：傳統聊天機器人依預設腳本回應，agent 則能預判需求並主動採取行動，複雜問題會自動升級給人類，也能直接開立工單或處理退款。">S5.5</span></li><li><span class="t">寫程式：探索程式碼庫、找相關檔案、跑測試</span><span class="cite" tabindex="0" title="軟體開發：給定 ticket 或 bug 報告，agent 可探索程式碼庫、找出相關檔案並執行測試；IBM 自家工具 Bob 有 10,000 名 IBM 開發者使用，據稱讓開發者生產力提升 45%。">S5.9</span></li><li><span class="t">法律：據報導，文件審閱、研究與起草時間平均減少約三分之一</span><span class="cite" tabindex="0" title="法律：Thomson Reuters 的 agent 助理據報導讓文件審閱、研究與起草的平均時間減少約三分之一。">S5.8</span></li><li><span class="t">金融：持續偵測詐欺、監控合規</span><span class="cite" tabindex="0" title="金融：可做持續性的詐欺偵測、合規監控與貸款審核；文中引用世界經濟論壇報告，指出一批試點節省約 30,000 個工作天，行政、文件與初步分析的生產力提升 20%–59%。">S5.6</span></li></ul><p class="aside">注意：效益數字多為廠商或客戶自述，未經獨立驗證。</p></section>
+<section class="slide"><h2>什麼時候「不該」用 Agent？</h2><ul class="pts"><li><span class="t">先用最簡單的解法，有時根本不需要 agent</span><span class="cite" tabindex="0" title="建議先找最簡單的解法，必要時才增加複雜度，甚至可能根本不需要 agentic 系統；agentic 系統通常拿延遲與成本換取更好的任務表現。文中進一步說，workflow 對定義清楚的任務能提供可預測性與一致性，而需要彈性、且要大規模由模型自行決策時，agent 是比較好的選擇。">S1.3</span></li><li><span class="t">Agent 常以延遲與成本換取更好的表現</span><span class="cite" tabindex="0" title="建議先找最簡單的解法，必要時才增加複雜度，甚至可能根本不需要 agentic 系統；agentic 系統通常拿延遲與成本換取更好的任務表現。文中進一步說，workflow 對定義清楚的任務能提供可預測性與一致性，而需要彈性、且要大規模由模型自行決策時，agent 是比較好的選擇。">S1.3</span></li><li><span class="t">適合的場景：複雜決策、規則難維護、大量非結構化資料</span><span class="cite" tabindex="0" title="最值得優先考慮 agent 的場景有三類：複雜決策（例如退款審核）、規則難以維護、大量依賴非結構化資料；若不符合，確定性的解法可能就夠了。">S2.4</span></li><li><span class="t">目前限制：context 有限、長期規劃困難、自然語言介面不夠可靠</span><span class="cite" tabindex="0" title="作者列出三項常見限制：有限的 context 長度（向量檢索雖能存取更大的知識池，但表達能力不如完整的注意力機制）；長期規劃與任務分解困難，遇到意外錯誤時不易調整計畫；自然語言介面不夠可靠（格式錯誤、偶爾不遵從指令），所以許多 demo 程式碼都在解析模型輸出。">S3.10</span></li></ul></section>
+<section class="slide"><h2>三句話帶走</h2><ul class="pts"><li><span class="t">Agent ＝ 用 LLM 做決策、用工具行動，並在迴圈中一步步完成任務</span><span class="cite" tabindex="0" title="agent 有兩個核心特徵：(1) 用 LLM 管理工作流程執行並做決策，能辨識工作何時完成、主動修正行動，失敗時可中止並把控制權交還使用者；(2) 能使用各種工具與外部系統互動，依流程當前狀態動態選擇工具，並始終在清楚定義的護欄內運作。">S2.3</span><span class="cite" tabindex="0" title="每個 orchestration 方式都有「run」的概念，通常實作成迴圈，讓 agent 持續運作到退出條件成立，常見退出條件包括呼叫最終輸出工具、模型回覆中沒有工具呼叫、發生錯誤、或達到最大回合數。">S2.7</span></li><li><span class="t">三個零件：規劃、記憶、工具</span><span class="cite" tabindex="0" title="在 LLM 驅動的自主 agent 系統中，LLM 扮演大腦，搭配三個關鍵元件：規劃（Planning）、記憶（Memory）、工具使用（Tool use）。">S3.1</span></li><li><span class="t">放手之前，先設好護欄、留好人類介入的出口</span><span class="cite" tabindex="0" title="護欄應分層設計：單一護欄通常不夠，要混合多種，包括 relevance classifier、safety classifier、PII filter、moderation、tool safeguards（依風險給低／中／高評級，評估因素包括唯讀或可寫入、能否還原、所需權限與財務影響，並據此觸發自動動作，例如在執行高風險功能前暫停做護欄檢查，或升級給人類）、rules-based protections、output validation。">S2.9</span><span class="cite" tabindex="0" title="應規劃人類介入機制，兩個主要觸發條件：超過失敗門檻（例如重試太多次）、以及高風險動作（例如大額退款、付款）。">S2.10</span></li></ul></section>
+<section class="slide"><h2>參考來源</h2><ul class="src"><li><span class="sid">S1</span><a href="https://www.anthropic.com/research/building-effective-agents" target="_blank" rel="noopener">Anthropic〈Building effective agents〉</a></li><li><span class="sid">S2</span><a href="https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf" target="_blank" rel="noopener">OpenAI〈A practical guide to building agents〉</a></li><li><span class="sid">S3</span><a href="https://lilianweng.github.io/posts/2023-06-23-agent/" target="_blank" rel="noopener">Lilian Weng〈LLM Powered Autonomous Agents〉</a></li><li><span class="sid">S4</span><a href="https://arxiv.org/abs/2210.03629" target="_blank" rel="noopener">Yao 等〈ReAct: Synergizing Reasoning and Acting in Language Models〉</a></li><li><span class="sid">S5</span><a href="https://www.ibm.com/think/topics/ai-agent-use-cases" target="_blank" rel="noopener">IBM〈AI agent use cases〉</a></li></ul><p class="aside">滑過每個藍色來源編號，可看到對應的原文要點。</p></section>
+</div>
+<div class="bar" id="bar"></div>
+<div class="nav"><button id="prev" aria-label="上一頁">←</button><span id="pos"></span><button id="next" aria-label="下一頁">→</button></div>
+<script>
+(function(){
+ var s=[].slice.call(document.querySelectorAll('.slide')),i=0;
+ function show(n){i=Math.max(0,Math.min(s.length-1,n));s.forEach(function(e,k){e.classList.toggle('on',k===i)});
+  document.getElementById('bar').style.width=((i+1)/s.length*100)+'%';
+  document.getElementById('pos').textContent=(i+1)+' / '+s.length;
+  try{history.replaceState(null,'','#'+(i+1))}catch(e){}}
+ document.addEventListener('keydown',function(e){
+  if(['ArrowRight','PageDown',' '].indexOf(e.key)>-1){e.preventDefault();show(i+1)}
+  if(['ArrowLeft','PageUp'].indexOf(e.key)>-1){e.preventDefault();show(i-1)}});
+ document.getElementById('next').onclick=function(){show(i+1)};
+ document.getElementById('prev').onclick=function(){show(i-1)};
+ var h=parseInt((location.hash||'').slice(1),10);show(isNaN(h)?0:h-1);
+})();
+</script></body></html>
